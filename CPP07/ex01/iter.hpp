@@ -3,8 +3,8 @@
 
 #include <iostream>
 
-template < typename T >
-void iter(T* array, int lenght, void (*fct)(T &))
+template < typename T, typename F >
+void iter(T* array, int lenght, void (*fct)(F))
 {
     for (int i = 0; i < lenght; i++)
         fct(array[i]);
