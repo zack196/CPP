@@ -1,47 +1,64 @@
 #include "Span.hpp"
 
-
-int main()
-{
-    const unsigned int N = 100; 
-    Span sp = Span(10000);
-    try
+int main() {
+    try 
     {
-        std::srand(time(NULL));
-        for (int i = 0; i < 0.9 * N ; i++)
-        {
-            const int rnd = std::rand();
-            sp.addNumber(rnd);
-        }
+        // Test 1: Basic Functionality
+        Span sp = Span(5);
+        
         sp.addNumber(6);
+        sp.addNumber(3);
         sp.addNumber(17);
         sp.addNumber(9);
         sp.addNumber(11);
 
-        std::vector<int> d;
-        for ( int i = 0; i < 0.1 * N; i++)
-        {
-            const int rnd = std::rand();
-            d.push_back(rnd);
+        std::cout << "Shortest Span: " << sp.shortestSpan() << std::endl;
+        std::cout << "Longest Span: " << sp.longestSpan() << std::endl;
+
+        // Test 2: Adding more numbers than allowed
+        try {
+            sp.addNumber(20);
+        } catch (std::exception &e) {
+            std::cerr << "Exception caught1: " << e.what() << std::endl;
         }
-        d.push_back(32);
-        d.push_back(31);
-        d.push_back(3);
-        d.push_back(34);
-        d.push_back(44);
 
+        // Test 3: Adding a large range of numbers
+        Span largeSpan = Span(10000);
+        std::vector<int> largeNumbers;
+        for (int i = 0; i < 10; ++i)
+            largeNumbers.push_back(i);
+        largeSpan.addLargeNumbers( largeNumbers.end(), largeNumbers.begin() );
+        largeSpan.print_span();
 
-        sp.addRange(d.begin(), d.end());
-        
-        std::cout << "shortest span : " << sp.shortestSpan() << std::endl;
-        std::cout << "longest span : " << sp.longestSpan() << std::endl;
-        
+        // Test 4: Edge case with no elements
+        Span emptySpan = Span(5);
+        try {
+            emptySpan.shortestSpan();
+        } catch (std::exception &e) {
+            std::cerr << "Exception caught 2: " << e.what() << std::endl;
+        }
+        try {
+            emptySpan.longestSpan();
+        } catch (std::exception &e) {
+            std::cerr << "Exception caught 3: " << e.what() << std::endl;
+        }
+
+        // Test 5: Edge case with only one element
+        Span oneElementSpan = Span(5);
+        oneElementSpan.addNumber(1);
+        try {
+            oneElementSpan.shortestSpan();
+        } catch (std::exception &e) {
+            std::cerr << "Exception caught 4: " << e.what() << std::endl;
+        }
+        try {
+            oneElementSpan.longestSpan();
+        } catch (std::exception &e) {
+            std::cerr << "Exception caught 5: " << e.what() << std::endl;
+        }
+        return 0;
     }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
+    catch(std::exception &e){
+        std::cout << e.what() << std::endl;
     }
-    sp.printSpan();
-    
-    return 0;
 }

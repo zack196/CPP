@@ -12,10 +12,7 @@ class Array
         T   *arr ;
         int arr_size;
     public:
-        Array() {
-            arr_size = 0;
-            arr = NULL;
-        }
+        Array() : arr(NULL), arr_size(0) {}
         Array(unsigned int u)
         {
             arr = new T [u];
@@ -28,7 +25,10 @@ class Array
             for (int i = 0; i < copy.size(); i++)
                 this->arr[i] = copy.arr[i];
         }
-        ~Array() { delete [] this->arr;}
+        ~Array()
+        { 
+            delete [] this->arr;
+        }
         Array<T>&  operator=(const Array& rhs)
         {
             if (this != &rhs)

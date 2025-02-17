@@ -20,7 +20,7 @@ int main()
     b.push_back(5);
 
     std::deque<int> c;
-    
+
     c.push_back(19);
     c.push_back(9);
     c.push_back(45);
@@ -30,8 +30,8 @@ int main()
 
     try
     {
-        std::cout << easyfind(a, 8) << std::endl;
-        std::cout << easyfind(a, 100) << std::endl;
+        easyfind(a, 8);
+        easyfind(a, 100);
     }
     catch(const std::exception& e)
     {
@@ -41,8 +41,8 @@ int main()
     
     try
     {
-        std::cout << easyfind(b, 5) << std::endl;
-        std::cout << easyfind(b, 16) << std::endl;
+        easyfind(b, 5);
+        easyfind(b, 16);
     }
     catch(const std::exception& e)
     {
@@ -52,8 +52,8 @@ int main()
     
     try
     {
-        std::cout << easyfind(c, 89) << std::endl;
-        std::cout << easyfind(c, 8) << std::endl;
+        easyfind(c, 89);
+        easyfind(c, 8);
     }
     catch(const std::exception& e)
     {

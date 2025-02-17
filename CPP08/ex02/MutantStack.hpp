@@ -1,5 +1,4 @@
 #ifndef MUTANTSTACK_HPP
-
 #define MUTANTSTACK_HPP
 
 # include <stack>
@@ -19,9 +18,9 @@ class MutantStack : public std::stack<T>
         typedef typename    container_type::const_iterator         const_iterator;
         typedef typename    container_type::const_reverse_iterator const_reverse_iterator;
 
-        MutantStack(){}
+        MutantStack() : std::stack<T>() {}
         MutantStack(const MutantStack& copy) : std::stack<T>(copy) {}
-        ~MutantStack() {}
+        ~MutantStack()  {}
         MutantStack& operator=(const MutantStack& rhs)
         {
             this->c = rhs.c;
@@ -37,14 +36,6 @@ class MutantStack : public std::stack<T>
         const_reverse_iterator  rbegin() const { return this->c.rbegin() ;}
         const_reverse_iterator  rend() const { return this->c.rend(); }
 };
-
-
-
-
-
-
-
-
 
 
 #endif

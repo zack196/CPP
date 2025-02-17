@@ -24,7 +24,25 @@ int main(int, char**)
     // SCOPE
     {
         Array<int> tmp = numbers;
+        for (int i = 0; i < MAX_VAL; i++)
+        {
+            if (tmp[i] != numbers[i])
+            {
+                std::cerr << "didn't save the same value!!" << std::endl;
+                return 1;
+            }
+        }
+        
+        
         Array<int> test(tmp);
+        for (int i = 0; i < MAX_VAL; i++)
+        {
+            if (test[i] != tmp[i])
+            {
+                std::cerr << "didn't save the same value!!" << std::endl;
+                return 1;
+            }
+        }
     }
 
     for (int i = 0; i < MAX_VAL; i++)
@@ -46,6 +64,7 @@ int main(int, char**)
         std::cerr << e.what() << '\n';
     }
 
+
     try
     {
         numbers[MAX_VAL] = 0;
@@ -55,10 +74,6 @@ int main(int, char**)
         std::cerr << e.what() << '\n';
     }
 
-    for (int i = 0; i < MAX_VAL; i++)
-    {
-        numbers[i] = rand();
-    }
     delete [] mirror;
 
     return 0;

@@ -1,21 +1,26 @@
 #include "iter.hpp"
 
-void print_elem(int &elem)
+template<typename T>
+void print_elem(T &elem)
 {
     std::cout << "elem " << elem << std::endl;
 }
 
-void add_one(int &elem)
+template<typename T>
+void incriment(T &elem)
 {
     elem++;
 }
 
 int main()
 {
-    int arr[6] = {1, 123, 33, 12, 1, 0};
+    int  intArr[6] = {1, 123, 33, 12, 1, 0};
 
-    iter(arr, 6, print_elem);
-    iter(arr, 6, add_one);
+    iter(intArr, 6, print_elem<int>);
+
+    iter(intArr, 6, incriment<int>);
+    
     std::cout << "------" << std::endl;
-    iter(arr, 6, print_elem);
+    
+    iter(intArr, 6, print_elem<int>);
 }

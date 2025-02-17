@@ -10,13 +10,14 @@
 #include <exception>
 
 template <typename T>
-int easyfind(T cont, int to_find)
+void easyfind(T cont, int to_find)
 {
     typename T::iterator it;
     it = std::find(cont.begin(), cont.end(), to_find);
     if (it == cont.end())
         throw(std::runtime_error("value not found!"));
-    return *it;
+    else
+        std::cout << "value found is : " << *it << std::endl;
 }
 
 

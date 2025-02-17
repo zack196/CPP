@@ -4,30 +4,34 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <numeric>
+
+typedef std::vector<int> vector;
 
 class Span
 {
 private:
-    std::vector<int> arr;
-    std::vector<int> span;
-    unsigned int max_size;
+    unsigned int    max_size;
+    vector          arr;
 public:
     Span();
-    Span(unsigned int N);
+    Span(unsigned int u);
     Span(const Span& copy);
-    Span& operator=(const Span& rhs);
     ~Span();
-
-    void    addNumber(int new_value);
+    Span& operator=(const Span& rhs);
+    
+    void    addNumber(int nbr);
     int     shortestSpan();
     int     longestSpan();
-    void    addRange(std::vector<int>::iterator first
-        , std::vector<int>::iterator last);
+    void addLargeNumbers(vector::iterator begin, vector::iterator end);
 
-
-    void    printSpan(); // a suprimer
+    void print_span()
+    {
+        for (vector::iterator i = arr.begin(); i != arr.end(); i++)
+            std::cout << *i << ", ";
+        std::cout << std::endl;
+    }
 };
-
 
 
 #endif
