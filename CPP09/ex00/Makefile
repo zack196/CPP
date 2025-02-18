@@ -1,28 +1,26 @@
 NAME=btc
-CFLAG= -Wall -Wextra -Werror -Wshadow -std=c++98
 CC=c++
-INCLUDE= 
-
-SRC= main.cpp 
-
-OBJ = $(SRC:.cpp=.o)
+CFLAGS= -Wall -Wextra -Werror -std=c++98
+INCLUDE=BitcoinExchange.hpp
+SRC= main.cpp BitcoinExchange.cpp
+OBJ=$(SRC:.cpp=.o)
 
 all : $(NAME)
 
-$(NAME): $(OBJ)
-	$(CC) $(CFLAG) $(OBJ) -o $(NAME)
+$(NAME) : $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
-$(OBJ) : $(INCLUDE)
+%.o : %.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
-%.o: %.cpp
-	$(CC) $(CFLAG) -c $< -o $@
-
-clean:
+clean :
 	rm -f $(OBJ)
-
-re : fclean all
 
 fclean : clean
 	rm -f $(NAME)
+
+$(OBJ) : $(INCLUDE)
+
+re : fclean all
 
 .PHONY : clean
