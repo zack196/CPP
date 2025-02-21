@@ -1,9 +1,9 @@
-NAME=RPN
+NAME=PmergeMe
 CFLAG= -Wall -Wextra -Werror -Wshadow -std=c++98
 CC=c++
-INCLUDE= RPN.hpp
+INCLUDE= PmergeMe.hpp
 
-SRC= main.cpp RPN.cpp
+SRC= main.cpp PmergeMe.cpp
 
 OBJ = $(SRC:.cpp=.o)
 

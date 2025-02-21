@@ -14,7 +14,7 @@ map	fill_map(const string &dataBase)
 		while (getline(file, line))
 		{
 			date = line.substr(0, 10);
-			ret[date] = std::strtod( line.substr(11, line.size()).c_str() , NULL);
+			ret[date] = strtod( line.substr(11, line.size()).c_str() , NULL);
 		}
 	}
 	else
@@ -22,29 +22,40 @@ map	fill_map(const string &dataBase)
 	return ret;
 }
 
-std::pair<string, double> get_data(string line)
+bool isValidDate(int year, int month, int day) {
+    struct tm t = {};
+    t.tm_year = year - 1900;
+    t.tm_mon = month - 1;
+    t.tm_mday = day;
+
+    time_t time = mktime(&t);
+    return (time != (time_t)-1) && (t.tm_mday == day);
+}
+
+std::pair<string, double>	get_data(string line)
 {
-	string		date;
-	double		value;
-	struct tm	t;
-	time_t		time;
-	char		*end;
-	
-	date = line.substr(0, 10);
-	t.tm_year = std::atoi(line.substr(0, 4).c_str()) - 1900;
-	t.tm_mon = std::atoi(line.substr(5, 2).c_str()) - 1;
-	t.tm_mday = std::atoi(line.substr(8, 2).c_str());
-	time = std::mktime(&t);
-	if (time == (time_t)-1)
-		throw(BadInputTime());
+	int year = atoi(line.substr(0, 4).c_str());
+	int month = atoi(line.substr(5, 2).c_str());
+	int day = atoi(line.substr(8, 2).c_str());
+
+	if (!isValidDate(year, month, day))
+		throw(std::runtime_error(("Error: bad input => " + line).c_str()));
 	if (line.size() < 12)
-		throw(BadValue());
-	value = std::strtod(line.substr(12, line.size()).c_str(), &end);
-	if (end)
-		throw(BadValue());
+		throw(std::runtime_error(("Error: bad input => " + line).c_str()));
+	
+	string		date = line.substr(0, 10);
+
+	char		*end;
+	double		value = strtod(line.substr(12, line.size()).c_str(), &end);
+
+	if (*end)
+		throw(std::runtime_error("Error: value"));
+
 	if (value < 0)
-		throw(Negative());
+		throw(std::runtime_error("Error: not a positive number."));
+
 	if (value > 1000)
-		throw(LargeNumber());
+		throw(std::runtime_error("Error: too large a number."));
+
 	return std::make_pair(date, value);
 }
