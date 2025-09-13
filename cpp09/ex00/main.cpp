@@ -1,8 +1,8 @@
 #include "BitcoinExchange.hpp"
 
-std::map<std::string, float> getCsvData(const std::string& dataCsv)
+std::map<std::string, double> getCsvData(const std::string& dataCsv)
 {
-    std::map<std::string, float> csvDataMap;
+    std::map<std::string, double> csvDataMap;
     std::ifstream   file(dataCsv.c_str());
     if (file.is_open())
     {
@@ -15,9 +15,9 @@ std::map<std::string, float> getCsvData(const std::string& dataCsv)
             std::string date = line.substr(0, commaPos);
             std::string value = line.substr(commaPos + 1);
             std::stringstream ss(value);
-            float   float_value;
-            ss >> float_value;
-            csvDataMap[date] = float_value;
+            double   double_value;
+            ss >> double_value;
+            csvDataMap[date] = double_value;
         }
     }
     else
@@ -32,7 +32,7 @@ int main(int ac, char **av)
         if (ac < 2)
             throw(std::runtime_error("No file was passed as input!"));
             
-        std::map<std::string, float> dataBase = getCsvData("data.csv");
+        std::map<std::string, double> dataBase = getCsvData("data.csv");
         
         BitcoinExchange b(std::string(av[1]), dataBase);
     }

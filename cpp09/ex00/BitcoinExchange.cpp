@@ -1,29 +1,44 @@
 #include "BitcoinExchange.hpp"
 
-BitcoinExchange::BitcoinExchange(const std::string& fileInput, std::map<std::string, float> dataBase) : _dataBase(dataBase), _fileInput(fileInput)
+/*
+2011-01-03 | 
+2011-01-03 | -
+2011-01-03 |1  //no space
+2011-01-03  1432432 | 2
+2009-01-02 | 2147483647
+2022-03-1.1 | 1000
+
+
+parse line 1 and it should be == date | value
+
+*/
+
+BitcoinExchange::BitcoinExchange(const std::string& fileInput, std::map<std::string, double> dataBase) : _dataBase(dataBase), _fileInput(fileInput)
         {
-            // _dataBase = getCsvData("data.csv");
             std::ifstream   file(fileInput.c_str());
             if (file.is_open())
             {
                 std::string line;
                 // ignore the first line
                 getline(file, line);
+                if (line != "date | value")
+                    throw(std::runtime_error("\"date | value\" should be on the top of the file"));
                 while (getline(file, line))
                 {
                     try
                     {
-                        size_t  slashPos = line.find("|");
+                        size_t  slashPos = line.find(" | ");
                         if (slashPos == std::string::npos)
                             throw(std::runtime_error("Error: bad input => " + line));
 
                         std::string date = line.substr(0, slashPos);
                         date = validateDate(date);
 
-                        std::string amountStr = line.substr(slashPos + 1);
-                        float amount = validateAmount(amountStr);
+                        if (line.size() <= slashPos + 3) throw(std::runtime_error("Error: bad input => " + line));
+                        std::string amountStr = line.substr(slashPos + 3); // here were it crach the (2025-02-11 |) exemple
+                        double amount = validateAmount(amountStr);
 
-                        float val = getValue(date, _dataBase);
+                        double val = getValue(date, _dataBase);
 
                         std::cout << date << " => " << amount << " = " << amount * val << std::endl;
                     }
@@ -50,7 +65,17 @@ std::string trimspaces(const std::string& str)
 
 std::string BitcoinExchange::validateDate(const std::string& str)
 {
-    std::string date = trimspaces(str);
+    std::string date = str;//trimspaces(str);
+    int dash_count = 0;
+    for (size_t i = 0; i < date.size(); i++)
+    {
+        if (date[i] == '-')
+            dash_count++;
+        if (dash_count > 2 || (date[i] != '-' && !isdigit(date[i])))
+            throw(std::runtime_error("Error: bad input date => " + str));
+        
+    }
+    
     int year, month, day;
     char dash1, dash2;
     std::istringstream ss(date);
@@ -79,47 +104,61 @@ std::string BitcoinExchange::validateDate(const std::string& str)
     return date;
 }
 
-float BitcoinExchange::validateAmount(const std::string& str)
+bool no_digit(const std::string& str)
 {
-    float   x;
-    int     tmp;
-    int     nbr_point = 1;
-
-    std::string amount = trimspaces(str);
-    std::istringstream  ss(amount);
-
-    for (size_t i = 0; i < amount.size(); i++)
+    for (size_t i = 0; i < str.size(); i++)
     {
-        if (i == 0 && amount[i] == '-')
-            continue ;
-        if (!std::isdigit(amount[i]) && amount[i] != '.')
-            throw(std::runtime_error("Error: bad input => number " + amount));
-        if (amount[i] == '.' && !nbr_point--)
-            throw(std::runtime_error("Error two point"));
+        if (isdigit(str[i]))
+            return false;
     }
-    
-    if (nbr_point == 1)
-    {
-        ss >> tmp;
-        if (tmp < 0)
-        throw(std::runtime_error("Error: not a positive number."));
-        else if (tmp > 1000)
-        throw(std::runtime_error("Error: too large a number."));
-        return (static_cast<float>(tmp));
-    }
-    ss >> x;
-    if (x < 0)
-        throw(std::runtime_error("Error: not a positive number."));
-    else if (x > 1000)
-        throw(std::runtime_error("Error: too large a number."));
-
-    return x;
+    return true;
 }
 
-float BitcoinExchange::getValue(std::string date, std::map<std::string, float> dataBase)
+bool two_point(const std::string& str)
 {
-    std::map<std::string, float>::iterator prevIt = dataBase.begin();
-    std::map<std::string, float>::iterator it = dataBase.begin();
+    int nbr_pnt = 0;
+    for (size_t i = 0; i < str.size(); i++)
+    if (str[i] == '.')
+        nbr_pnt++;
+    return nbr_pnt > 1 ;
+}
+
+bool check_digits(const std::string& str)
+{
+    for (size_t i = 0; i < str.size(); i++)
+    {
+        if (i == 0 && (str[i] == '-' || str[i] == '+'))
+        {
+            if (str[i] == '-')
+                throw(std::runtime_error("Error: not a positive number."));
+            continue;
+        }
+        if (!isdigit(str[i]) && str[i] != '.') 
+            return true;
+    }
+    return false;
+}
+
+double BitcoinExchange::validateAmount(const std::string& str)
+{
+    std::string amount = str;
+
+    if (no_digit(amount) || two_point(amount) || check_digits(amount))
+        throw(std::runtime_error("Error: bad input => number " + amount));
+        
+    std::istringstream ss(amount);
+    double res;
+    ss >> res;
+    if (res > 1000)
+        throw(std::runtime_error("Error: too large a number."));
+    
+    return res;
+}
+
+double BitcoinExchange::getValue(std::string date, std::map<std::string, double> dataBase)
+{
+    std::map<std::string, double>::iterator prevIt = dataBase.begin();
+    std::map<std::string, double>::iterator it = dataBase.begin();
     if (date < it->first)
         throw(std::runtime_error("Error: our data begin from 2009-01-02"));
     
@@ -134,15 +173,15 @@ float BitcoinExchange::getValue(std::string date, std::map<std::string, float> d
 
 BitcoinExchange::BitcoinExchange() {}
 
-BitcoinExchange::BitcoinExchange(const BitcoinExchange& cp)
-{
-    _dataBase = cp._dataBase;
-    _fileInput = cp._fileInput;
-}
+BitcoinExchange::BitcoinExchange(const BitcoinExchange& cp) 
+    : _dataBase(cp._dataBase), _fileInput(cp._fileInput) {}
 
 BitcoinExchange&    BitcoinExchange::operator=(const BitcoinExchange& rhs) 
 {
-    _dataBase = rhs._dataBase;
-    _fileInput = rhs._fileInput;
+    if (this != &rhs)
+    {
+        _dataBase = rhs._dataBase;
+        _fileInput = rhs._fileInput;
+    }
     return *this;
 }

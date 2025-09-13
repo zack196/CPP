@@ -1,5 +1,14 @@
 #include "PmergeMe.hpp"
 
+void printVector(std::vector<int> v)
+{
+    for (size_t i = 0; i < v.size(); i++)
+    {
+        std::cout << v[i] << ", ";
+    }
+    std::cout << std::endl;
+}
+
 PmergeMe::PmergeMe(const PmergeMe& copy)
 {
     (void) copy;
@@ -109,7 +118,7 @@ std::vector<int> PmergeMe::getJacobVector(const int size)
         J1 = Jn;
     }
     return jac;    
-}
+}// 0 1 1 3 5 11 21 43
 
 void PmergeMe::insertPendVector(std::vector<int>& pend, std::vector<int>& mainChain)
 {
@@ -122,8 +131,7 @@ void PmergeMe::insertPendVector(std::vector<int>& pend, std::vector<int>& mainCh
         {
             if (i >= 0 && i < static_cast<int>(pend.size()))
             {
-                std::vector<int>::iterator pos = std::lower_bound(mainChain.begin()
-                    , mainChain.end(), pend[i]);
+                std::vector<int>::iterator pos = std::lower_bound(mainChain.begin(), mainChain.end(), pend[i]);
                 mainChain.insert(pos, pend[i]);
                 inserted[i] = true;
             }
@@ -138,7 +146,11 @@ void PmergeMe::insertPendVector(std::vector<int>& pend, std::vector<int>& mainCh
             mainChain.insert(pos, pend[i]);
         }
     }
+    // printVector(mainChain);
+    // printVector(pend);
 }
+
+
 
 std::vector<int> PmergeMe::mergeInsertSortVector(const std::vector<int>& input)
 {
@@ -163,8 +175,8 @@ std::vector<int> PmergeMe::mergeInsertSortVector(const std::vector<int>& input)
     }
     if (input.size() % 2 == 1)
         pend.push_back(input[input.size() - 1]);
-
-    mergeInsertSortVector(mainChain);
+    
+    mainChain = mergeInsertSortVector(mainChain);
     insertPendVector(pend, mainChain);
 
     return mainChain;

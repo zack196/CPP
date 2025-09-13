@@ -22,7 +22,7 @@ class PmergeMe
 		// Deque:
 		std::deque<int> getJacobDeque(const int size);
 		void insertPendDeque(std::deque<int>& pend, std::deque<int>& mainChain);
-			std::deque<int> mergeInsertSortDeque(const std::deque<int>& input);
+		std::deque<int> mergeInsertSortDeque(const std::deque<int>& input);
 
 		// Vector:
 		std::vector<int> getJacobVector(const int size);

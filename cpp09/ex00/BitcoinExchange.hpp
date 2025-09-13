@@ -11,7 +11,7 @@
 class BitcoinExchange
 {
     private:
-        std::map<std::string, float> _dataBase;
+        std::map<std::string, double> _dataBase;
         std::string _fileInput;
     public:
         BitcoinExchange();
@@ -20,11 +20,10 @@ class BitcoinExchange
         ~BitcoinExchange();
 
         std::string validateDate(const std::string& str);
-        float validateAmount(const std::string& str);
-        float getValue(std::string date, std::map<std::string, float> dataBase);
-        
-        BitcoinExchange(const std::string& fileInput, std::map<std::string, float> dataBase) ;
+        double validateAmount(const std::string& str);
+        double getValue(std::string date, std::map<std::string, double> dataBase);
 
+        BitcoinExchange(const std::string& fileInput, std::map<std::string, double> dataBase);
 };
 
 

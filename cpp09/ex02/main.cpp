@@ -1,5 +1,11 @@
 #include "PmergeMe.hpp"
 
+/*
+after: 3 3 12 3 23
+
+*/
+
+
 int getNbr(const std::string& strNbr)
 {
     std::istringstream  ss(strNbr);
@@ -20,6 +26,16 @@ int getNbr(const std::string& strNbr)
         throw(std::runtime_error("Error"));
 
     return static_cast<int>(val);
+}
+
+bool is_msataf(const std::vector<int> &v)
+{
+    for (size_t i = 0; i < v.size(); i++)
+    {
+        if (i + 1 < v.size() && v[i] > v[i + 1])
+            return false;
+    }
+    return true;
 }
 
 int main(int ac, char** av)
@@ -53,6 +69,8 @@ int main(int ac, char** av)
         for (size_t i = 0; i < vecInput.size(); i++)
             std::cout << vecInput[i] << " ";
         std::cout << std::endl;
+
+        std::cout << "vector msataf == " << is_msataf(vecInput) << std::endl;//            removeeee
 
         double elapsed_us = (end - start) * 1e6 / CLOCKS_PER_SEC;
         

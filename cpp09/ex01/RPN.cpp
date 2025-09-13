@@ -33,40 +33,44 @@ RPN::RPN(std::string expresion)
 
         if (expresion[i] == '-')
         {
-            int a = _numbers.top();
+            double a = _numbers.top();
             _numbers.pop();
-            int b = _numbers.top();
+            double b = _numbers.top();
             _numbers.pop();
-            _numbers.push(b - a);
+            _numbers.push(static_cast<double>(b) - a);
         }
 
         if (expresion[i] == '+')
         {
-            int a = _numbers.top();
+            double a = _numbers.top();
             _numbers.pop();
-            int b = _numbers.top();
+            double b = _numbers.top();
             _numbers.pop();
-            _numbers.push(b + a);
+            _numbers.push(static_cast<double>(b) + a);
         }
 
         if (expresion[i] == '*')
         {
-            int a = _numbers.top();
+            double a = _numbers.top();
             _numbers.pop();
-            int b = _numbers.top();
+            double b = _numbers.top();
             _numbers.pop();
-            _numbers.push(b * a);
+            _numbers.push(static_cast<double>(b) * a);
+
         }
 
         if (expresion[i] == '/')
         {
-            int a = _numbers.top();
+            double a = _numbers.top();
             _numbers.pop();
-            int b = _numbers.top();
+            double b = _numbers.top();
             _numbers.pop();
-            if (b == 0)
-                throw(std::runtime_error("Error"));
-            _numbers.push(b / a);
+            if (a == 0) 
+            {
+                throw(std::runtime_error("Error div by 0"));
+                
+            }
+            _numbers.push(static_cast<double>(b) / a);
         }
     }
 
